@@ -3,6 +3,7 @@ package com.authenticationService.controller;
 import com.authenticationService.dto.APIResponse;
 import com.authenticationService.dto.LoginDto;
 import com.authenticationService.dto.UserDto;
+import com.authenticationService.entity.User;
 import com.authenticationService.repository.UserRepository;
 import com.authenticationService.service.AuthService;
 import com.authenticationService.service.JwtService;
@@ -12,18 +13,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-
 @RequestMapping("api/v1/auth/")
 public class AuthController {
 
     @Autowired
     private AuthService authService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private AuthenticationManager authManager;
@@ -68,6 +68,8 @@ public class AuthController {
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(response.getStatus()));
     }
 
-
-
+    @GetMapping("/get-user")
+    public User getUser(@RequestParam String username) {
+        return userRepository.findByUsername(username);
+    }
 }
